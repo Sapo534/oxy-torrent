@@ -1,7 +1,7 @@
 [package]
 name = "oxy-torrent"
-version = "0.1.0"
-edition = "2021"
+version = "0.2.0"
+edition = "2024"
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
@@ -10,8 +10,9 @@ serde_bytes = "0.11"
 hex = "0.4"
 sha1 = "0.10"
 tokio = { version = "1.0", features = ["full"] }
-reqwest = { version = "0.11", features = ["json"] } # Убрали blocking
+reqwest = { version = "0.11", features = ["json"] }
 urlencoding = "2.1"
-axum = "0.7"
+rand = "0.8"
 serde_json = "1.0"
-tower-http = { version = "0.5", features = ["fs"] } # Чтобы отдавать статические файлы
+axum = { version = "0.7", features = ["multipart"] }
+rfd = "0.15"

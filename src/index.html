@@ -2,57 +2,100 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Rust Torrent Dashboard</title>
+    <title>Oxy-Torrent v0.2.0</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #e0e0e0; margin: 0; display: flex; justify-content: center; padding: 2rem; }
-        .card { background: #1e1e1e; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.7); width: 900px; border: 1px solid #333; }
-        h2 { color: #00d4ff; font-weight: 300; margin-top: 0; }
-        table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
-        th { text-align: left; color: #888; font-size: 0.8rem; text-transform: uppercase; padding: 10px; border-bottom: 2px solid #333; }
-        td { padding: 15px 10px; border-bottom: 1px solid #2a2a2a; }
-        .progress-bar { background: #333; border-radius: 10px; height: 10px; width: 150px; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 10px; }
-        .progress-fill { background: #00d4ff; height: 100%; transition: width 0.5s ease; }
-        .speed { font-family: monospace; color: #00ff88; }
-        .eta { color: #ffcc00; font-size: 0.9rem; }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #e0e0e0; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .card { background: #1e1e1e; padding: 25px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.7); width: 950px; border: 1px solid #333; margin-bottom: 20px; }
+        h2 { color: #00d4ff; margin-top: 0; font-weight: 400; }
+        .settings { display: flex; gap: 10px; align-items: center; background: #252525; padding: 15px; border-radius: 8px; }
+        input[type="text"] { background: #1a1a1a; border: 1px solid #444; color: #00ff88; padding: 10px; border-radius: 5px; flex-grow: 1; font-family: monospace; }
+        button.primary { background: #00d4ff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        button.primary:hover { background: #00aacc; }
+        #drop-zone { border: 2px dashed #444; border-radius: 12px; padding: 40px; text-align: center; color: #888; cursor: pointer; transition: 0.3s; margin-top: 20px; }
+        #drop-zone:hover { border-color: #00d4ff; background: #252525; color: #fff; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { text-align: left; color: #666; font-size: 0.75rem; text-transform: uppercase; padding: 10px; border-bottom: 2px solid #333; }
+        td { padding: 15px 10px; border-bottom: 1px solid #2a2a2a; font-size: 0.9rem; }
+        .progress-bar { background: #333; height: 10px; width: 150px; border-radius: 5px; display: inline-block; overflow: hidden; margin-right: 10px; }
+        .progress-fill { background: #00d4ff; height: 100%; transition: width 0.4s; }
+        .speed { color: #00ff88; font-family: monospace; }
+        .btn-del { color: #ff4444; background: none; border: none; cursor: pointer; font-size: 1.5rem; line-height: 1; }
     </style>
 </head>
 <body>
     <div class="card">
-        <h2>Torrent Registry</h2>
+        <h2>Параметры</h2>
+        <div class="settings">
+            <span>Папка загрузки:</span>
+            <input type="text" id="dir-input" readonly>
+            <button class="primary" onclick="chooseDir()">Выбрать папку...</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Ваши торренты</h2>
+        <div id="drop-zone">
+            Перетащите .torrent файл сюда или нажмите для выбора
+            <input type="file" id="file-input" style="display:none" accept=".torrent">
+        </div>
         <table>
-            <thead>
-                <tr>
-                    <th>Имя файла</th>
-                    <th>Прогресс</th>
-                    <th>Скорость</th>
-                    <th>ETA</th>
-                    <th>Статус</th>
-                </tr>
-            </thead>
+            <thead><tr><th>Файл</th><th>Прогресс</th><th>Скорость</th><th>Статус</th><th></th></tr></thead>
             <tbody id="list"></tbody>
         </table>
     </div>
+
     <script>
+        const dz = document.getElementById('drop-zone');
+        const fi = document.getElementById('file-input');
+        dz.onclick = () => fi.click();
+        fi.onchange = (e) => upload(e.target.files[0]);
+        dz.ondrop = (e) => { e.preventDefault(); upload(e.dataTransfer.files[0]); };
+        dz.ondragover = (e) => e.preventDefault();
+
+        async function upload(f) { if(!f) return; const fd = new FormData(); fd.append('f', f); await fetch('/api/upload', {method:'POST', body:fd}); }
+        async function deleteTor(id) {
+            if (confirm('Удалить этот торрент из списка?')) {
+                // Обязательно используй ` (обратные кавычки)
+                const response = await fetch(`/api/delete/${id}`, { method: 'POST' });
+                const result = await response.json();
+                if (result.status === 'ok') {
+                    await update(); // Принудительно обновляем список сразу
+                }
+            }
+        }
+        
+        async function chooseDir() {
+            const r = await fetch('/api/choose-dir', { method: 'POST' });
+            const d = await r.json();
+            if (d.status === 'ok') {
+                document.getElementById('dir-input').value = d.path;
+            }
+        }
+
         async function update() {
             try {
                 const r = await fetch('/api/stats');
-                const torrents = await r.json();
-                document.getElementById('list').innerHTML = torrents.map(t => `
+                const data = await r.json();
+                document.getElementById('list').innerHTML = data.map(t => `
                     <tr>
-                        <td style="font-size: 0.9rem">${t.name}</td>
-                        <td>
-                            <div class="progress-bar"><div class="progress-fill" style="width: ${t.percent}%"></div></div>
-                            <span style="font-size: 0.8rem">${Math.round(t.percent)}%</span>
-                        </td>
+                        <td style="font-weight: bold">${t.name}</td>
+                        <td><div class="progress-bar"><div class="progress-fill" style="width:${t.percent}%"></div></div> ${Math.round(t.percent)}%</td>
                         <td class="speed">${t.speed}</td>
-                        <td class="eta">${t.eta}</td>
-                        <td style="font-size: 0.8rem; color: #888">${t.status}</td>
+                        <td style="color:#888">${t.status}</td>
+                        <td><button class="btn-del" onclick="deleteTor(${t.id})">&times;</button></td>
                     </tr>
                 `).join('');
-            } catch(e) {}
+            } catch(e){}
         }
-        setInterval(update, 1000);
-        update();
+
+        async function init() {
+            const r = await fetch('/api/settings');
+            const d = await r.json();
+            document.getElementById('dir-input').value = d.path;
+            setInterval(update, 1000);
+            update();
+        }
+        init();
     </script>
 </body>
 </html>
