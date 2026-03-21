@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Rust Torrent Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: #e0e0e0; margin: 0; display: flex; justify-content: center; padding: 2rem; }
+        .card { background: #1e1e1e; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.7); width: 900px; border: 1px solid #333; }
+        h2 { color: #00d4ff; font-weight: 300; margin-top: 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+        th { text-align: left; color: #888; font-size: 0.8rem; text-transform: uppercase; padding: 10px; border-bottom: 2px solid #333; }
+        td { padding: 15px 10px; border-bottom: 1px solid #2a2a2a; }
+        .progress-bar { background: #333; border-radius: 10px; height: 10px; width: 150px; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 10px; }
+        .progress-fill { background: #00d4ff; height: 100%; transition: width 0.5s ease; }
+        .speed { font-family: monospace; color: #00ff88; }
+        .eta { color: #ffcc00; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Torrent Registry</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Имя файла</th>
+                    <th>Прогресс</th>
+                    <th>Скорость</th>
+                    <th>ETA</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody id="list"></tbody>
+        </table>
+    </div>
+    <script>
+        async function update() {
+            try {
+                const r = await fetch('/api/stats');
+                const torrents = await r.json();
+                document.getElementById('list').innerHTML = torrents.map(t => `
+                    <tr>
+                        <td style="font-size: 0.9rem">${t.name}</td>
+                        <td>
+                            <div class="progress-bar"><div class="progress-fill" style="width: ${t.percent}%"></div></div>
+                            <span style="font-size: 0.8rem">${Math.round(t.percent)}%</span>
+                        </td>
+                        <td class="speed">${t.speed}</td>
+                        <td class="eta">${t.eta}</td>
+                        <td style="font-size: 0.8rem; color: #888">${t.status}</td>
+                    </tr>
+                `).join('');
+            } catch(e) {}
+        }
+        setInterval(update, 1000);
+        update();
+    </script>
+</body>
+</html>
