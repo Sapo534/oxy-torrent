@@ -1,4 +1,4 @@
-# Rust Torrent Client 🦀⚡
+# Rust "Oxy-Torrent" Client 🦀⚡
 
 Минималистичный и быстрый торрент-клиент на Rust с веб-интерфейсом.
 
