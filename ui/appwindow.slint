@@ -1,0 +1,208 @@
+import { Button, VerticalBox, HorizontalBox, ProgressIndicator, ListView, CheckBox } from "std-widgets.slint";
+
+export struct TorrentUiData {
+    id: int,
+    name: string,
+    progress: float,
+    speed: string,
+    peers: string,
+    status: string,
+}
+
+export component AppWindow inherits Window {
+    title: "Oxy-Torrent";
+    min-width: 950px;
+    min-height: 650px;
+    
+    // --- Global properties for Theme & Navigation ---
+    in-out property <bool> light_mode: false;
+    in-out property <int> active_tab: 0; // 0 = Downloads, 1 = Settings
+    in property <string> download_path: "downloads";
+
+    // Dynamic colors based on light_mode
+    property <color> main_bg: light_mode ? #ffffff : #1c1c1c;
+    property <color> sidebar_bg: light_mode ? #f3f3f3 : #202020;
+    property <color> card_bg: light_mode ? #ffffff : #272727;
+    property <color> text_primary: light_mode ? #000000 : #ffffff;
+    property <color> text_secondary: light_mode ? #666666 : #999999;
+    property <color> border_color: light_mode ? #e0e0e0 : #333333;
+
+    background: main_bg;
+
+    in property <[TorrentUiData]> torrent_list: [];
+    callback add_torrent_clicked();
+    callback delete_torrent_clicked(int);
+    callback change_dir_clicked();
+
+    HorizontalBox {
+        padding: 0;
+        spacing: 0;
+
+        // --- Sidebar (Fluent Style) ---
+        Rectangle {
+            width: 260px;
+            background: sidebar_bg;
+            border-color: border_color;
+            border-width: 1px;
+            
+            VerticalBox {
+                padding: 25px;
+                alignment: start;
+                spacing: 15px;
+
+                Text {
+                    text: "Oxy-Torrent";
+                    font-size: 22px;
+                    font-weight: 700;
+                    color: #00d4ff;
+                }
+
+                // Nav Item: Downloads
+                Rectangle {
+                    height: 40px;
+                    background: active_tab == 0 ? (light_mode ? #e5e5e5 : #2d2d2d) : transparent;
+                    border-radius: 6px;
+                    HorizontalBox {
+                        padding-left: 15px;
+                        Text { text: "📥  Downloads"; vertical-alignment: center; color: text_primary; font-size: 14px; }
+                    }
+                    TouchArea { clicked => { active_tab = 0; } }
+                }
+
+                // Nav Item: Settings
+                Rectangle {
+                    height: 40px;
+                    background: active_tab == 1 ? (light_mode ? #e5e5e5 : #2d2d2d) : transparent;
+                    border-radius: 6px;
+                    HorizontalBox {
+                        padding-left: 15px;
+                        Text { text: "⚙️  Settings"; vertical-alignment: center; color: text_primary; font-size: 14px; }
+                    }
+                    TouchArea { clicked => { active_tab = 1; } }
+                }
+
+                Rectangle { vertical-stretch: 1; } // Spacer
+
+                Button {
+                    text: "➕ Add Torrent";
+                    primary: true;
+                    height: 40px;
+                    clicked => { root.add_torrent_clicked() }
+                }
+            }
+        }
+
+        // --- Main Content Area ---
+        VerticalBox {
+            padding: 35px;
+            spacing: 25px;
+
+            // --- DOWNLOADS TAB ---
+            if active_tab == 0 : VerticalBox {
+                spacing: 20px;
+                Text {
+                    text: "Active Downloads";
+                    font-size: 28px;
+                    font-weight: 600;
+                    color: text_primary;
+                }
+
+                Rectangle {
+                    background: card_bg;
+                    border-radius: 10px;
+                    border-width: 1px;
+                    border-color: border_color;
+                    clip: true;
+                    
+                    ListView {
+                        for data in root.torrent_list: VerticalBox {
+                            padding: 0; spacing: 0;
+                            Rectangle {
+                                height: 100px;
+                                background: card_bg;
+                                HorizontalBox {
+                                    padding: 25px; spacing: 30px; alignment: space-between;
+                                    
+                                    // File Details
+                                    VerticalBox {
+                                        width: 380px; alignment: center; spacing: 5px;
+                                        Text { text: data.name; font-size: 15px; font-weight: 600; color: text_primary; overflow: elide; }
+                                        Text { text: data.status; font-size: 12px; color: text_secondary; }
+                                    }
+                                    
+                                    // Progress Section
+                                    VerticalBox {
+                                        width: 200px; alignment: center; spacing: 10px;
+                                        ProgressIndicator { progress: data.progress / 100; }
+                                        Text { text: Math.round(data.progress) + "%"; font-size: 11px; color: text_secondary; }
+                                    }
+                                    
+                                    // Stats
+                                    VerticalBox {
+                                        width: 120px; alignment: center; spacing: 4px;
+                                        Text { text: data.speed; color: #00ff88; font-weight: 700; font-family: "Consolas"; }
+                                        Text { text: data.peers + " peers"; font-size: 12px; color: text_secondary; }
+                                    }
+                                    
+                                    // Delete Action
+                                    Button { text: "🗑️"; width: 45px; clicked => { root.delete_torrent_clicked(data.id) } }
+                                }
+                            }
+                            // Divider line
+                            Rectangle { height: 1px; background: border_color; }
+                        }
+                    }
+                }
+            }
+
+            // --- SETTINGS TAB ---
+            if active_tab == 1 : VerticalBox {
+                spacing: 30px;
+                alignment: start;
+                Text {
+                    text: "Settings";
+                    font-size: 28px;
+                    font-weight: 600;
+                    color: text_primary;
+                }
+
+                // Theme Toggle
+                VerticalBox {
+                    spacing: 10px;
+                    Text { text: "Interface Mode"; color: text_primary; font-weight: 600; }
+                    HorizontalBox {
+                        alignment: start;
+                        CheckBox {
+                            checked: light_mode;
+                            toggled => { light_mode = !light_mode; }
+                        }
+                        Text { text: "Enable Light Theme"; color: text_primary; vertical-alignment: center; }
+                    }
+                }
+
+                // Storage Settings
+                VerticalBox {
+                    spacing: 10px;
+                    Text { text: "Storage"; color: text_primary; font-weight: 600; }
+                    HorizontalBox {
+                        spacing: 10px;
+                        Rectangle {
+                            background: sidebar_bg;
+                            border-radius: 4px;
+                            height: 35px;
+                            horizontal-stretch: 1;
+                            HorizontalBox { // Fixed padding issue
+                                padding-left: 10px;
+                                Text { text: root.download_path; vertical-alignment: center; color: text_secondary; }
+                            }
+                        }
+                        Button {
+                            text: "Change Directory";
+                            clicked => { root.change_dir_clicked() }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
