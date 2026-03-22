@@ -9,8 +9,8 @@ A minimalist and fast torrent client written in Rust with a web interface.
 - **Real-time Stats**: Speed ​​and ETA calculations in real time.
 
 ### How to run:
-1. Download and run the latest version of the client (under Releases).
-2. Open `http://localhost:3000` in your browser.
+1. Download and launch the latest version of the client (under Releases).
+2. Select the desired download directory in the settings.
 3. Select the desired .torrent file to download.
 
 ## AI 🤖💻
@@ -34,7 +34,7 @@ This project was developed entirely through collaboration between me and the Gem
 
 ### Как запустить:
 1. Скачайте и запустите последнюю версию клиента (в Releases).
-2. Откройте `http://localhost:3000` в браузере.
+2. Выберите нужную директорию скачивания в настройках.
 3. Выберите нужный .torrent файл для скачивания.
 
 ## ИИ 🤖💻
