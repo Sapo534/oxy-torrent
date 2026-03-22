@@ -20,7 +20,7 @@ A minimalist, high-performance native torrent client written in Rust.
 
 ## AI Disclosure 🤖💻
 
-This project was developed through an intensive 4-hour pair-programming session between a human architect and the **Gemini 3.0 Flash Preview** neural network.
+This project was developed through an intensive pair-programming session between a human architect and the **Gemini 3.0 Flash Preview** neural network.
 
 - **AI's Role:** Implementing the core BitTorrent protocol, low-level networking (TCP/UDP), multi-threaded architecture, and Slint UI logic.
 - **Human's Role:** Architectural design, OS-level debugging (Windows), UI/UX polishing, and quality assurance.
@@ -48,7 +48,7 @@ This project was developed through an intensive 4-hour pair-programming session 
 
 ## ИИ 🤖💻
 
-Этот проект был полностью разработан в ходе интенсивной 4-часовой сессии совместной работы человека и нейросети **Gemini 3.0 Flash Preview**.
+Этот проект был полностью разработан в ходе интенсивной сессии совместной работы человека и нейросети **Gemini 3.0 Flash Preview**.
 
 - **Роль ИИ:** Написание сетевого кода, реализация протокола BitTorrent (TCP/UDP), создание многопоточной архитектуры и логики интерфейса Slint.
 - **Моя роль:** Проектирование архитектуры, отладка на уровне ОС (Windows), доработка UI/UX и постановка задач.
