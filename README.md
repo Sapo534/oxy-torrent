@@ -15,7 +15,7 @@ A minimalist and fast torrent client written in Rust with a web interface.
 
 ## AI 🤖💻
 
-This project was developed entirely during a 4-hour collaborative session between me and the Gemini 3.0 Flash Preview neural network.
+This project was developed entirely through collaboration between me and the Gemini 3.0 Flash Preview neural network.
 
 - **AI's Role:** Writing network code, implementing the BitTorrent protocol, creating the multithreaded architecture and frontend.
 - **My Role:** Designing the architecture, debugging, testing, and defining tasks.
@@ -39,7 +39,7 @@ This project was developed entirely during a 4-hour collaborative session betwee
 
 ## ИИ 🤖💻
 
-Этот проект был полностью разработан в ходе 4-часовой сессии совместной работы меня и нейросети **Gemini 3.0 Flash Preview**.
+Этот проект был полностью разработан в ходе совместной работы меня и нейросети **Gemini 3.0 Flash Preview**.
 
 - **Роль ИИ:** Написание сетевого кода, реализация протокола BitTorrent, создание многопоточной архитектуры и фронтенда.
 - **Моя роль:** Проектирование архитектуры, отладка, тестирование и постановка задач.
