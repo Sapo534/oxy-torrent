@@ -1,46 +1,55 @@
-# Rust "Oxy-Torrent" Client 🦀⚡
+# Rust "Oxy-Torrent" Client 🦀🛰️
+
 ## EN 
-A minimalist and fast torrent client written in Rust with a web interface.
+A minimalist, high-performance native torrent client written in Rust.
 
 ### Features:
-- **Pipelining**: Request queue for maximum download speed.
-- **Multi-threaded**: Download chunks in parallel from different peers.
-- **Web GUI**: Beautiful dashboard written in HTML/CSS/JS (Axum + Tailwind style).
-- **Real-time Stats**: Speed ​​and ETA calculations in real time.
+- **Native GUI**: Fast and lightweight interface powered by **Slint** (Windows 11 Fluent style).
+- **Pipelining**: Optimized request queue (32 blocks) for maximum bandwidth saturation.
+- **Multi-threaded Engine**: Parallel chunk downloads from multiple peers.
+- **UDP & HTTP Support**: Compatible with modern UDP trackers (BEP 15) and classic HTTP trackers.
+- **Session Persistence**: Automatically remembers and restores your downloads after restart.
+- **File Resume**: Smart integrity check (SHA-1) to resume partial downloads without losing data.
+- **Theme Support**: Includes both Dark and Light modes.
 
 ### How to run:
-1. Download and launch the latest version of the client (under Releases).
-2. Select the desired download directory in the settings.
-3. Select the desired .torrent file to download.
+1. Download the latest `oxy-torrent.exe` from **Releases**.
+2. Launch the application.
+3. Go to **Settings** to select your download directory.
+4. Use the **"Add Torrent"** button or drag-and-drop a `.torrent` file into the window.
 
-## AI 🤖💻
+## AI Disclosure 🤖💻
 
-This project was developed entirely through collaboration between me and the Gemini 3.0 Flash Preview neural network.
+This project was developed through an intensive 4-hour pair-programming session between a human architect and the **Gemini 3.0 Flash Preview** neural network.
 
-- **AI's Role:** Writing network code, implementing the BitTorrent protocol, creating the multithreaded architecture and frontend.
-- **My Role:** Designing the architecture, debugging, testing, and defining tasks.
-- **Status:** This is an experimental prototype. Although it is fully functional and downloads files successfully, the code may require refactoring for use.
+- **AI's Role:** Implementing the core BitTorrent protocol, low-level networking (TCP/UDP), multi-threaded architecture, and Slint UI logic.
+- **Human's Role:** Architectural design, OS-level debugging (Windows), UI/UX polishing, and quality assurance.
+- **Status:** Experimental prototype. It is fully functional for daily tasks but may require further refactoring for stability.
 
 ---
 
 ## RU
-Минималистичный и быстрый торрент-клиент на Rust с веб-интерфейсом.
+Минималистичный и высокопроизводительный нативный торрент-клиент на Rust.
 
 ### Особенности:
-- **Pipelining**: Очередь запросов для максимальной скорости загрузки.
-- **Multi-threaded**: Скачивание кусков параллельно от разных пиров.
-- **Web GUI**: Красивый дашборд на HTML/CSS/JS (Axum + Tailwind-style).
-- **Real-time Stats**: Расчет скорости и ETA в реальном времени.
+- **Нативный GUI**: Быстрый и легкий интерфейс на базе **Slint** (в стиле Windows 11 Fluent).
+- **Pipelining**: Оптимизированная очередь запросов (32 блока) для максимальной скорости загрузки.
+- **Многопоточность**: Скачивание кусков параллельно от разных пиров одновременно.
+- **Поддержка UDP и HTTP**: Работает с современными UDP-трекерами (BEP 15) и классическими HTTP-серверами.
+- **Сохранение сессий**: Автоматически запоминает и восстанавливает список загрузок при перезапуске.
+- **Докачка (Resume)**: Умная проверка целостности (SHA-1) для продолжения загрузки без потери данных.
+- **Поддержка тем**: Наличие темного и светлого режимов интерфейса.
 
 ### Как запустить:
-1. Скачайте и запустите последнюю версию клиента (в Releases).
-2. Выберите нужную директорию скачивания в настройках.
-3. Выберите нужный .torrent файл для скачивания.
+1. Скачайте последнюю версию `oxy-torrent.exe` в разделе **Releases**.
+2. Запустите приложение.
+3. Перейдите в **Settings**, чтобы выбрать папку для сохранения файлов.
+4. Нажмите **"Add Torrent"** или просто перетащите `.torrent` файл в окно программы.
 
 ## ИИ 🤖💻
 
-Этот проект был полностью разработан в ходе совместной работы меня и нейросети **Gemini 3.0 Flash Preview**.
+Этот проект был полностью разработан в ходе интенсивной 4-часовой сессии совместной работы человека и нейросети **Gemini 3.0 Flash Preview**.
 
-- **Роль ИИ:** Написание сетевого кода, реализация протокола BitTorrent, создание многопоточной архитектуры и фронтенда.
-- **Моя роль:** Проектирование архитектуры, отладка, тестирование и постановка задач.
-- **Статус:** Это экспериментальный прототип. Несмотря на то, что он полностью работоспособен и успешно скачивает файлы, код может требовать рефакторинга для использования.
+- **Роль ИИ:** Написание сетевого кода, реализация протокола BitTorrent (TCP/UDP), создание многопоточной архитектуры и логики интерфейса Slint.
+- **Моя роль:** Проектирование архитектуры, отладка на уровне ОС (Windows), доработка UI/UX и постановка задач.
+- **Статус:** Экспериментальный прототип. Полностью работоспособен и пригоден для скачивания файлов, но код может требовать рефакторинга для достижения стабильности.
